@@ -5,6 +5,11 @@ const { MongoClient } = require('mongodb');
 const url = 'mongodb+srv://jawaharravulapalli:Iamgitamite111@final-db.sim8yca.mongodb.net/?retryWrites=true&w=majority';
 
 const server = http.createServer(async (req, res) => {
+    // Set CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    
     if (req.url === '/') {
         fs.readFile(path.join(__dirname, 'public', 'index.html'), (err, content) => {
             if (err) {
@@ -16,6 +21,11 @@ const server = http.createServer(async (req, res) => {
             res.end(content);
         });
     } else if (req.url === '/api') {
+        if (req.method === 'OPTIONS') {
+            res.writeHead(204);
+            res.end();
+            return;
+        }
         try {
             const data = await getData();
             res.writeHead(200, { 'Content-Type': 'application/json' });
